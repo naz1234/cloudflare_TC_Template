@@ -25,7 +25,7 @@ Node version: 20 or later
 Create a new D1 database for this TC template, then add a Pages binding:
 
 ```txt
-Binding name: DB
+Binding name: TC_DB
 Recommended database name: l3-tc-template-db
 ```
 
@@ -42,7 +42,7 @@ Healthy `/api/health` response should show:
 ```json
 {
   "ok": true,
-  "databaseBinding": "DB",
+  "databaseBinding": "TC_DB",
   "tableReady": true,
   "tableName": "tc_template_records"
 }
