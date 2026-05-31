@@ -3,7 +3,7 @@ compatibility_date = "2026-05-26"
 pages_build_output_dir = "dist"
 
 # For Cloudflare Pages, create a dedicated TC Template D1 database first, then bind it as DB.
-# Example uses the current TC Template D1 Database ID. Update it if you create a new database.
+# TC Template D1 database binding for Cloudflare Pages.
 [[d1_databases]]
 binding = "DB"
 database_name = "l3-tc-template-db"

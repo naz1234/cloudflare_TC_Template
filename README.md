@@ -50,17 +50,20 @@ Healthy `/api/health` response should show:
 
 ## Optional local Wrangler setup
 
-A sample file is included:
+Wrangler files included:
 
 ```txt
+wrangler.toml
 wrangler.example.toml
 ```
 
-To use Wrangler locally:
+Current D1 Database ID:
 
-1. Rename `wrangler.example.toml` to `wrangler.toml`.
-2. Replace `PUT_YOUR_D1_DATABASE_ID_HERE` with your real D1 Database ID.
-3. Run the migration manually if needed.
+```txt
+ef7b3bd7-d44f-4c9f-924c-e84a2951fe02
+```
+
+Run the migration manually if needed.
 
 ## Install and run locally
 
