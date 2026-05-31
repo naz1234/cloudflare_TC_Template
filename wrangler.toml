@@ -2,9 +2,9 @@ name = "l3-tc-template"
 compatibility_date = "2026-05-26"
 pages_build_output_dir = "dist"
 
-# For Cloudflare Pages, create a dedicated TC Template D1 database first, then bind it as TC_DB.
+# For Cloudflare Pages, create a dedicated TC Template D1 database first, then bind it as DB.
 # TC Template D1 database binding for Cloudflare Pages.
 [[d1_databases]]
-binding = "TC_DB"
+binding = "DB"
 database_name = "l3-tc-template-db"
 database_id = "ef7b3bd7-d44f-4c9f-924c-e84a2951fe02"

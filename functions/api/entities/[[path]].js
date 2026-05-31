@@ -186,9 +186,9 @@ export async function onRequest(context) {
     return new Response(null, { status: 204, headers: jsonHeaders });
   }
 
-  if (!env.TC_DB) {
+  if (!env.DB) {
     return json({
-      error: 'D1 binding "TC_DB" is missing. In Cloudflare Pages, add a D1 database binding named TC_DB.',
+      error: 'D1 binding "DB" is missing. In Cloudflare Pages, add a D1 database binding named DB.',
     }, 500);
   }
 
@@ -200,7 +200,7 @@ export async function onRequest(context) {
     return json({ error: `Unknown entity: ${entity || '(empty)'}` }, 404);
   }
 
-  await ensureSchema(env.TC_DB);
+  await ensureSchema(env.DB);
 
   const url = new URL(request.url);
 
@@ -208,7 +208,7 @@ export async function onRequest(context) {
     if (request.method === 'GET' && !actionOrId) {
       const sort = url.searchParams.get('sort') || '';
       const limit = Number(url.searchParams.get('limit') || '0');
-      let records = await getAllRecords(env.TC_DB, entity);
+      let records = await getAllRecords(env.DB, entity);
       records = sortRecords(records, sort);
       if (limit > 0) records = records.slice(0, limit);
       return json(records);
@@ -216,7 +216,7 @@ export async function onRequest(context) {
 
     if (request.method === 'POST' && actionOrId === 'filter') {
       const filters = await readJsonBody(request, {});
-      let records = await getAllRecords(env.TC_DB, entity);
+      let records = await getAllRecords(env.DB, entity);
       records = applyFilters(records, filters);
       return json(records);
     }
@@ -227,7 +227,7 @@ export async function onRequest(context) {
       const created = [];
 
       for (const record of records) {
-        created.push(await createRecord(env.TC_DB, entity, record));
+        created.push(await createRecord(env.DB, entity, record));
       }
 
       return json(created, 201);
@@ -235,19 +235,19 @@ export async function onRequest(context) {
 
     if (request.method === 'POST' && !actionOrId) {
       const payload = await readJsonBody(request, {});
-      const created = await createRecord(env.TC_DB, entity, payload);
+      const created = await createRecord(env.DB, entity, payload);
       return json(created, 201);
     }
 
     if ((request.method === 'PUT' || request.method === 'PATCH') && actionOrId) {
       const payload = await readJsonBody(request, {});
-      const updated = await updateRecord(env.TC_DB, entity, actionOrId, payload);
+      const updated = await updateRecord(env.DB, entity, actionOrId, payload);
       if (!updated) return json({ error: 'Record not found' }, 404);
       return json(updated);
     }
 
     if (request.method === 'DELETE' && actionOrId) {
-      return json(await deleteRecord(env.TC_DB, entity, actionOrId));
+      return json(await deleteRecord(env.DB, entity, actionOrId));
     }
 
     return json({ error: 'Unsupported route or method' }, 405);

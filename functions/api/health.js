@@ -31,23 +31,23 @@ export async function onRequest(context) {
     return new Response(null, { status: 204, headers: jsonHeaders });
   }
 
-  if (!env.TC_DB) {
+  if (!env.DB) {
     return json({
       ok: false,
-      error: 'D1 binding "TC_DB" is missing. In Cloudflare Pages, add a D1 database binding named TC_DB.',
+      error: 'D1 binding "DB" is missing. In Cloudflare Pages, add a D1 database binding named DB.',
     }, 500);
   }
 
   try {
-    await ensureSchema(env.TC_DB);
+    await ensureSchema(env.DB);
 
-    const tableCheck = await env.TC_DB
+    const tableCheck = await env.DB
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'tc_template_records'")
       .first();
 
     return json({
       ok: true,
-      databaseBinding: 'TC_DB',
+      databaseBinding: 'DB',
       tableReady: Boolean(tableCheck?.name),
       tableName: 'tc_template_records',
       message: 'TC Template D1 schema is ready.',
