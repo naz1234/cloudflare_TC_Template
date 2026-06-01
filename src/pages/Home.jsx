@@ -239,7 +239,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="mx-auto min-h-[calc(100vh-56px)] w-full max-w-[1900px] px-4 py-5 lg:px-6">
+      <main className="mx-auto min-h-[calc(100vh-56px)] w-full max-w-[1500px] px-4 py-5 lg:px-6">
         <section className="rounded-2xl border border-[#1d4363] bg-[#0a2236]/95 shadow-2xl shadow-black/20">
           <div className="border-b border-[#1d4363] bg-gradient-to-r from-[#0d3655] via-[#0a2b47] to-[#071828] px-4 py-4 sm:px-5">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -282,40 +282,42 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="space-y-4 p-4">
-            <div className="rounded-2xl border border-[#1d4363] bg-[#071828]/80 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7eb8e0]">
-                User input checklist
-              </p>
-              <div className="mt-3 grid gap-2 text-sm text-[#d7ecfb] md:grid-cols-2 xl:grid-cols-3">
-                <p>• ODS alarm code / point / alarm name.</p>
-                <p>• MAZ and TSR location.</p>
-                <p>• Affected train IDs, TIDs, location and alarm codes.</p>
-                <p>• CCTV result, reset time and release action.</p>
-                <p>• Station TA / roving TA observation details.</p>
-                <p>• TSR removal time and SR number.</p>
-              </div>
-            </div>
-
-            {FIELD_GROUPS.map((group) => (
-              <div key={group.title} className="rounded-2xl border border-[#1d4363] bg-[#071828]/80 p-4">
-                <h2 className="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-[#d9f1ff]">
-                  {group.title}
-                </h2>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                  {group.fields.map(([key, label]) => (
-                    <FieldInput
-                      key={key}
-                      label={label}
-                      value={odsForm[key]}
-                      onChange={(value) => updateField(key, value)}
-                    />
-                  ))}
+          <div className="grid gap-4 p-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(520px,0.9fr)]">
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-[#1d4363] bg-[#071828]/80 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7eb8e0]">
+                  User input checklist
+                </p>
+                <div className="mt-3 grid gap-2 text-sm text-[#d7ecfb] md:grid-cols-2">
+                  <p>• ODS alarm code / point / alarm name.</p>
+                  <p>• MAZ and TSR location.</p>
+                  <p>• Affected train IDs, TIDs, location and alarm codes.</p>
+                  <p>• CCTV result, reset time and release action.</p>
+                  <p>• Station TA / roving TA observation details.</p>
+                  <p>• TSR removal time and SR number.</p>
                 </div>
               </div>
-            ))}
 
-            <section className="w-full rounded-2xl border border-[#2a536f] bg-[#061827] p-4 shadow-xl shadow-black/20 xl:w-[60%]">
+              {FIELD_GROUPS.map((group) => (
+                <div key={group.title} className="rounded-2xl border border-[#1d4363] bg-[#071828]/80 p-4">
+                  <h2 className="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-[#d9f1ff]">
+                    {group.title}
+                  </h2>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {group.fields.map(([key, label]) => (
+                      <FieldInput
+                        key={key}
+                        label={label}
+                        value={odsForm[key]}
+                        onChange={(value) => updateField(key, value)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <aside className="rounded-2xl border border-[#2a536f] bg-[#061827] p-4 shadow-xl shadow-black/20 xl:sticky xl:top-[76px] xl:self-start">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-[#d9f1ff]">
@@ -332,10 +334,10 @@ export default function Home() {
                 </button>
               </div>
 
-              <pre className="min-h-[360px] overflow-x-auto whitespace-pre rounded-xl border border-[#163854] bg-[#020f1b] p-4 font-mono text-[12px] leading-6 text-[#e8f7ff] shadow-inner shadow-black/30">
-{outputLog}
+              <pre className="min-h-[520px] whitespace-pre-wrap rounded-xl border border-[#163854] bg-[#020f1b] p-4 text-[13px] leading-6 text-[#e8f7ff] shadow-inner shadow-black/30">
+                {outputLog}
               </pre>
-            </section>
+            </aside>
           </div>
         </section>
       </main>
