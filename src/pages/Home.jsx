@@ -315,7 +315,7 @@ export default function Home() {
               </div>
             ))}
 
-            <section className="rounded-2xl border border-[#2a536f] bg-[#061827] p-4 shadow-xl shadow-black/20">
+            <section className="w-full rounded-2xl border border-[#2a536f] bg-[#061827] p-4 shadow-xl shadow-black/20 xl:w-[60%]">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-[#d9f1ff]">
