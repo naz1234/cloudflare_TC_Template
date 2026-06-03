@@ -92,49 +92,44 @@ function formatPastedLog(raw) {
     .replace(/^\s*(\d{1,2}:\d{2})\s*[-–]\s*/i, "$1 hrs – ");
 }
 
-function Field({ label, value, onChange, placeholder, type = "text" }) {
+function PillInput({ value, onChange, placeholder, width = "w-[130px]", ariaLabel }) {
   return (
-    <label className="block space-y-1.5">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#87afd0]">
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="h-10 w-full rounded-xl border border-[#1c4563] bg-[#071828]/80 px-3 text-sm text-white outline-none transition placeholder:text-[#5d7f9a] focus:border-[#4f9ee8] focus:ring-2 focus:ring-[#4f9ee8]/20"
-      />
-    </label>
+    <input
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      placeholder={placeholder}
+      aria-label={ariaLabel || placeholder}
+      className={`mx-1 my-1 inline-flex h-9 ${width} rounded-full border border-[#2b638c] bg-[#092b47] px-3 text-center text-[13px] font-bold text-white outline-none transition placeholder:text-[#6892b3] hover:border-[#4d9fe5] focus:border-[#79c8ff] focus:bg-[#0d385d] focus:ring-2 focus:ring-[#4f9ee8]/25`}
+    />
   );
 }
 
-function TextAreaField({ label, value, onChange, placeholder, rows = 4 }) {
-  return (
-    <label className="block space-y-1.5 md:col-span-2">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#87afd0]">
-        {label}
-      </span>
-      <textarea
-        rows={rows}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="w-full resize-y rounded-xl border border-[#1c4563] bg-[#071828]/80 px-3 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-[#5d7f9a] focus:border-[#4f9ee8] focus:ring-2 focus:ring-[#4f9ee8]/20"
-      />
-    </label>
-  );
-}
-
-function SectionCard({ title, children }) {
+function PillSection({ title, children }) {
   return (
     <section className="rounded-2xl border border-[#173a56] bg-[#082037]/70 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.12em] text-white">
+      <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.12em] text-white">
         <span className="h-2 w-2 rounded-full bg-[#5fb0f2] shadow-[0_0_18px_rgba(95,176,242,0.75)]" />
         {title}
       </h3>
-      <div className="grid gap-3 md:grid-cols-2">{children}</div>
+      <div className="space-y-3 text-[14px] leading-9 text-[#d8ebfb]">{children}</div>
     </section>
+  );
+}
+
+function RelatedAlarmBox({ value, onChange }) {
+  return (
+    <label className="block space-y-2 rounded-2xl border border-dashed border-[#2b638c] bg-[#061827]/70 p-3">
+      <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#87afd0]">
+        Paste related ATS / train alarm logs here
+      </span>
+      <textarea
+        rows={5}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="14:37 hrs – Code V606 T18 TID206 at 3J1 TC2004 EB application due to slide-controlled EB."
+        className="w-full resize-y rounded-2xl border border-[#1c4563] bg-[#071828]/90 px-3 py-3 font-mono text-[13px] leading-6 text-white outline-none transition placeholder:text-[#5d7f9a] focus:border-[#4f9ee8] focus:ring-2 focus:ring-[#4f9ee8]/20"
+      />
+    </label>
   );
 }
 
@@ -308,7 +303,7 @@ export default function Home() {
                       ODS Activation Log Generator
                     </h1>
                     <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9fbed8]">
-                      Fill in the blanks only. The TC log output will update automatically with the approved section titles.
+                      Fill the blue pill blanks only. Output updates automatically on the right.
                     </p>
                   </div>
                 </div>
@@ -336,174 +331,300 @@ export default function Home() {
 
             <div className="grid gap-5 p-5 lg:grid-cols-[minmax(0,1fr)_minmax(480px,0.9fr)] lg:p-6">
               <div className="space-y-4">
-                <SectionCard title="ODS / MAZ Details">
-                  <Field
-                    label="Activation Time"
-                    value={form.activationTime}
-                    onChange={(value) => updateField("activationTime", value)}
-                    placeholder="14:36"
-                  />
-                  <Field
-                    label="Alarm Code"
-                    value={form.alarmCode}
-                    onChange={(value) => updateField("alarmCode", value)}
-                    placeholder="Code W283"
-                  />
-                  <Field
-                    label="ODS Alarm"
-                    value={form.odsAlarm}
-                    onChange={(value) => updateField("odsAlarm", value)}
-                    placeholder="3J1_ODS3T1 / ODS3T2"
-                  />
-                  <Field
-                    label="Location"
-                    value={form.location}
-                    onChange={(value) => updateField("location", value)}
-                    placeholder="3J1"
-                  />
-                  <Field
-                    label="MAZ / TSR Applied Time"
-                    value={form.mazTime}
-                    onChange={(value) => updateField("mazTime", value)}
-                    placeholder="14:36"
-                  />
-                  <Field
-                    label="Affected Track Circuits"
-                    value={form.affectedTcs}
-                    onChange={(value) => updateField("affectedTcs", value)}
-                    placeholder="TC2004 and TC2003"
-                  />
-                </SectionCard>
+                <PillSection title="ODS Activated – No Visible Obstacle">
+                  <p>
+                    <PillInput
+                      value={form.activationTime}
+                      onChange={(value) => updateField("activationTime", value)}
+                      placeholder="14:36"
+                      width="w-[90px]"
+                      ariaLabel="Activation time"
+                    />
+                    hrs –
+                    <PillInput
+                      value={form.alarmCode}
+                      onChange={(value) => updateField("alarmCode", value)}
+                      placeholder="Code W283"
+                      width="w-[125px]"
+                      ariaLabel="Alarm code"
+                    />
+                    <PillInput
+                      value={form.odsAlarm}
+                      onChange={(value) => updateField("odsAlarm", value)}
+                      placeholder="3J1_ODS3T1 / ODS3T2"
+                      width="w-[250px]"
+                      ariaLabel="ODS alarm"
+                    />
+                    Obstacle Detection System alarm received at
+                    <PillInput
+                      value={form.location}
+                      onChange={(value) => updateField("location", value)}
+                      placeholder="3J1"
+                      width="w-[90px]"
+                      ariaLabel="Location"
+                    />
+                    .
+                  </p>
+                </PillSection>
 
-                <SectionCard title="Train Hold / Related Alarms">
-                  <Field
-                    label="Stopped / Held Time"
-                    value={form.stopTime}
-                    onChange={(value) => updateField("stopTime", value)}
-                    placeholder="14:37"
-                  />
-                  <Field
-                    label="Stopped / Held Trains"
-                    value={form.stoppedTrains}
-                    onChange={(value) => updateField("stoppedTrains", value)}
-                    placeholder="T18 and T41"
-                  />
-                  <TextAreaField
-                    label="Related ATS / Train Alarm Logs"
+                <PillSection title="All Approaching Trains Held / Stopped and TSR 45 kph Applied">
+                  <p>
+                    <PillInput
+                      value={form.mazTime}
+                      onChange={(value) => updateField("mazTime", value)}
+                      placeholder="14:36"
+                      width="w-[90px]"
+                      ariaLabel="MAZ and TSR applied time"
+                    />
+                    hrs – MAZ protection applied at
+                    <PillInput
+                      value={form.affectedTcs}
+                      onChange={(value) => updateField("affectedTcs", value)}
+                      placeholder="TC2004 and TC2003"
+                      width="w-[220px]"
+                      ariaLabel="Affected track circuits"
+                    />
+                    . TSR 45 kph applied at the same affected track circuits.
+                  </p>
+
+                  <RelatedAlarmBox
                     value={form.relatedAlarmLogs}
                     onChange={(value) => updateField("relatedAlarmLogs", value)}
-                    placeholder="14:37 hrs – Code V606 T18 TID206 at 3J1 TC2004 EB application due to slide-controlled EB."
-                    rows={5}
                   />
-                </SectionCard>
 
-                <SectionCard title="SCADA / CCTV / Reset">
-                  <Field
-                    label="SCADA Pop-Up Postponed Time"
-                    value={form.scadaTime}
-                    onChange={(value) => updateField("scadaTime", value)}
-                    placeholder="14:37"
-                  />
-                  <Field
-                    label="SC Name / Role"
-                    value={form.scName}
-                    onChange={(value) => updateField("scName", value)}
-                    placeholder="SC"
-                  />
-                  <Field
-                    label="CCTV Instruction Time"
-                    value={form.cctvInstructionTime}
-                    onChange={(value) => updateField("cctvInstructionTime", value)}
-                    placeholder="14:38"
-                  />
-                  <Field
-                    label="Track Clearance Confirmed Time"
-                    value={form.clearanceTime}
-                    onChange={(value) => updateField("clearanceTime", value)}
-                    placeholder="14:40"
-                  />
-                  <Field
-                    label="ODS Reset Time"
-                    value={form.resetTime}
-                    onChange={(value) => updateField("resetTime", value)}
-                    placeholder="14:40"
-                  />
-                  <Field
-                    label="ODS Alarm Reset"
-                    value={form.resetAlarm}
-                    onChange={(value) => updateField("resetAlarm", value)}
-                    placeholder="ODS3T2 3J1"
-                  />
-                </SectionCard>
+                  <p>
+                    <PillInput
+                      value={form.stopTime}
+                      onChange={(value) => updateField("stopTime", value)}
+                      placeholder="14:37"
+                      width="w-[90px]"
+                      ariaLabel="Train stop time"
+                    />
+                    hrs – TC stopped
+                    <PillInput
+                      value={form.stoppedTrains}
+                      onChange={(value) => updateField("stoppedTrains", value)}
+                      placeholder="T18 and T41"
+                      width="w-[150px]"
+                      ariaLabel="Stopped trains"
+                    />
+                    while CCTV playback was ongoing.
+                  </p>
+                </PillSection>
 
-                <SectionCard title="Normalisation / TA Observation">
-                  <Field
-                    label="Train Release Time"
-                    value={form.releaseTime}
-                    onChange={(value) => updateField("releaseTime", value)}
-                    placeholder="14:40"
-                  />
-                  <Field
-                    label="TA Instruction Time"
-                    value={form.taInstructionTime}
-                    onChange={(value) => updateField("taInstructionTime", value)}
-                    placeholder="14:40"
-                  />
-                  <Field
-                    label="Roving TA Board Train"
-                    value={form.rovingTaTrain}
-                    onChange={(value) => updateField("rovingTaTrain", value)}
-                    placeholder="TID101 T43"
-                  />
-                  <Field
-                    label="TA Board Location"
-                    value={form.taBoardLocation}
-                    onChange={(value) => updateField("taBoardLocation", value)}
-                    placeholder="3G2 PF1"
-                  />
-                  <Field
-                    label="Observe From"
-                    value={form.observeFrom}
-                    onChange={(value) => updateField("observeFrom", value)}
-                    placeholder="3H1"
-                  />
-                  <Field
-                    label="Observe To"
-                    value={form.observeTo}
-                    onChange={(value) => updateField("observeTo", value)}
-                    placeholder="3J1"
-                  />
-                  <Field
-                    label="TA Boarded Time"
-                    value={form.taBoardedTime}
-                    onChange={(value) => updateField("taBoardedTime", value)}
-                    placeholder="14:41"
-                  />
-                  <Field
-                    label="TA Report Time"
-                    value={form.taReportTime}
-                    onChange={(value) => updateField("taReportTime", value)}
-                    placeholder="14:47"
-                  />
-                  <Field
-                    label="TA Report Train"
-                    value={form.taReportTrain}
-                    onChange={(value) => updateField("taReportTrain", value)}
-                    placeholder="T43"
-                  />
-                  <Field
-                    label="TSR Removed Time"
-                    value={form.tsrRemovedTime}
-                    onChange={(value) => updateField("tsrRemovedTime", value)}
-                    placeholder="14:48"
-                  />
-                  <Field
-                    label="SR Number"
-                    value={form.srNumber}
-                    onChange={(value) => updateField("srNumber", value)}
-                    placeholder="10115146"
-                  />
-                </SectionCard>
+                <PillSection title="SCADA Pop-Up Postponed">
+                  <p>
+                    <PillInput
+                      value={form.scadaTime}
+                      onChange={(value) => updateField("scadaTime", value)}
+                      placeholder="14:37"
+                      width="w-[90px]"
+                      ariaLabel="SCADA postponed time"
+                    />
+                    hrs – SCADA cut-off pop-up postponed by TC pending track clearance confirmation via Live CCTV and CCTV playback.
+                  </p>
+                </PillSection>
+
+                <PillSection title="CCTV Playback Reviewed and Track Clearance Confirmed">
+                  <p>
+                    <PillInput
+                      value={form.cctvInstructionTime}
+                      onChange={(value) => updateField("cctvInstructionTime", value)}
+                      placeholder="14:38"
+                      width="w-[90px]"
+                      ariaLabel="CCTV instruction time"
+                    />
+                    hrs – TC informed
+                    <PillInput
+                      value={form.scName}
+                      onChange={(value) => updateField("scName", value)}
+                      placeholder="SC"
+                      width="w-[95px]"
+                      ariaLabel="SC name or role"
+                    />
+                    to check the CCTV trigger on ODP and review CCTV playback 3 minutes prior to the ODS activation.
+                  </p>
+
+                  <p>
+                    <PillInput
+                      value={form.clearanceTime}
+                      onChange={(value) => updateField("clearanceTime", value)}
+                      placeholder="14:40"
+                      width="w-[90px]"
+                      ariaLabel="Clearance time"
+                    />
+                    hrs – No trespasser or obstruction observed via Live CCTV and CCTV playback. Track clearance confirmed at
+                    <PillInput
+                      value={form.location}
+                      onChange={(value) => updateField("location", value)}
+                      placeholder="3J1"
+                      width="w-[90px]"
+                      ariaLabel="Clearance location"
+                    />
+                    .
+                  </p>
+                </PillSection>
+
+                <PillSection title="ODS Reset and MAZ Protection Cleared">
+                  <p>
+                    <PillInput
+                      value={form.resetTime}
+                      onChange={(value) => updateField("resetTime", value)}
+                      placeholder="14:40"
+                      width="w-[90px]"
+                      ariaLabel="Reset time"
+                    />
+                    hrs – TC reset
+                    <PillInput
+                      value={form.resetAlarm}
+                      onChange={(value) => updateField("resetAlarm", value)}
+                      placeholder="ODS3T2 3J1"
+                      width="w-[160px]"
+                      ariaLabel="Reset alarm"
+                    />
+                    alarm via ATS. MAZ protection cleared and SCADA cut-off pop-up cancelled.
+                  </p>
+                </PillSection>
+
+                <PillSection title="Normalisation / Train Movement Resumed">
+                  <p>
+                    <PillInput
+                      value={form.releaseTime}
+                      onChange={(value) => updateField("releaseTime", value)}
+                      placeholder="14:40"
+                      width="w-[90px]"
+                      ariaLabel="Train release time"
+                    />
+                    hrs – TC released stopped trains
+                    <PillInput
+                      value={form.stoppedTrains}
+                      onChange={(value) => updateField("stoppedTrains", value)}
+                      placeholder="T18 and T41"
+                      width="w-[150px]"
+                      ariaLabel="Released trains"
+                    />
+                    under TSR 45 kph.
+                  </p>
+
+                  <p>
+                    <PillInput
+                      value={form.taInstructionTime}
+                      onChange={(value) => updateField("taInstructionTime", value)}
+                      placeholder="14:40"
+                      width="w-[90px]"
+                      ariaLabel="TA instruction time"
+                    />
+                    hrs – TC instructed roving TA to board
+                    <PillInput
+                      value={form.rovingTaTrain}
+                      onChange={(value) => updateField("rovingTaTrain", value)}
+                      placeholder="TID101 T43"
+                      width="w-[150px]"
+                      ariaLabel="Roving TA train"
+                    />
+                    at
+                    <PillInput
+                      value={form.taBoardLocation}
+                      onChange={(value) => updateField("taBoardLocation", value)}
+                      placeholder="3G2 PF1"
+                      width="w-[130px]"
+                      ariaLabel="TA board location"
+                    />
+                    and observe both tracks from
+                    <PillInput
+                      value={form.observeFrom}
+                      onChange={(value) => updateField("observeFrom", value)}
+                      placeholder="3H1"
+                      width="w-[85px]"
+                      ariaLabel="Observe from"
+                    />
+                    to
+                    <PillInput
+                      value={form.observeTo}
+                      onChange={(value) => updateField("observeTo", value)}
+                      placeholder="3J1"
+                      width="w-[85px]"
+                      ariaLabel="Observe to"
+                    />
+                    .
+                  </p>
+
+                  <p>
+                    <PillInput
+                      value={form.taBoardedTime}
+                      onChange={(value) => updateField("taBoardedTime", value)}
+                      placeholder="14:41"
+                      width="w-[90px]"
+                      ariaLabel="TA boarded time"
+                    />
+                    hrs – Roving TA boarded
+                    <PillInput
+                      value={form.rovingTaTrain}
+                      onChange={(value) => updateField("rovingTaTrain", value)}
+                      placeholder="TID101 T43"
+                      width="w-[150px]"
+                      ariaLabel="Boarded train"
+                    />
+                    at
+                    <PillInput
+                      value={form.taBoardLocation}
+                      onChange={(value) => updateField("taBoardLocation", value)}
+                      placeholder="3G2 PF1"
+                      width="w-[130px]"
+                      ariaLabel="Boarded location"
+                    />
+                    .
+                  </p>
+
+                  <p>
+                    <PillInput
+                      value={form.taReportTime}
+                      onChange={(value) => updateField("taReportTime", value)}
+                      placeholder="14:47"
+                      width="w-[90px]"
+                      ariaLabel="TA report time"
+                    />
+                    hrs – TA onboard
+                    <PillInput
+                      value={form.taReportTrain}
+                      onChange={(value) => updateField("taReportTrain", value)}
+                      placeholder="T43"
+                      width="w-[95px]"
+                      ariaLabel="TA report train"
+                    />
+                    reported both tracks clear with no abnormalities found.
+                  </p>
+
+                  <p>
+                    <PillInput
+                      value={form.tsrRemovedTime}
+                      onChange={(value) => updateField("tsrRemovedTime", value)}
+                      placeholder="14:48"
+                      width="w-[90px]"
+                      ariaLabel="TSR removed time"
+                    />
+                    hrs – TSR 45 kph at
+                    <PillInput
+                      value={form.affectedTcs}
+                      onChange={(value) => updateField("affectedTcs", value)}
+                      placeholder="TC2004 and TC2003"
+                      width="w-[220px]"
+                      ariaLabel="TSR removed track circuits"
+                    />
+                    removed.
+                  </p>
+
+                  <p>
+                    SR
+                    <PillInput
+                      value={form.srNumber}
+                      onChange={(value) => updateField("srNumber", value)}
+                      placeholder="10115146"
+                      width="w-[135px]"
+                      ariaLabel="SR number"
+                    />
+                  </p>
+                </PillSection>
               </div>
 
               <aside className="lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)]">
